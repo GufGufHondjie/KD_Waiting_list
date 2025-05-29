@@ -1,0 +1,93 @@
+// schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Patient {
+  id                 String   @id @default(uuid())
+  first_name         String
+  last_name          String
+  birthdate          DateTime
+  phone              String
+  whatsapp_number    String?
+  preferred_times    String
+  preferred_language String?
+  created_at         DateTime @default(now())
+  notes              String?
+
+  waiting_entries  WaitingList[]
+  contact_attempts ContactAttempt[]
+}
+
+model AppointmentType {
+  id               String @id @default(uuid())
+  name             String @unique
+  default_duration Int
+  default_priority Int
+
+  triage_rules    TriageRule[]
+  waiting_entries WaitingList[]
+}
+
+model Provider {
+  id             String  @id @default(uuid())
+  name           String
+  specialization String?
+}
+
+model TriageRule {
+  id                  String          @id @default(uuid())
+  appointment_type    AppointmentType @relation(fields: [appointmentTypeId], references: [id])
+  appointmentTypeId   String
+  pain                Boolean
+  broken_tooth        Boolean
+  swelling            Boolean
+  sensitive_temp      Boolean
+  existing_patient    Boolean
+  calculated_priority Int
+  waiting_entries     WaitingList[]
+}
+
+model WaitingList {
+  id        String  @id @default(uuid())
+  patient   Patient @relation(fields: [patientId], references: [id])
+  patientId String
+
+  appointment_type  AppointmentType @relation(fields: [appointmentTypeId], references: [id])
+  appointmentTypeId String
+
+  providers_needed String
+  duration         Int
+  created_at       DateTime    @default(now())
+  status           String
+  priority         Int
+  triage           TriageRule? @relation(fields: [triageId], references: [id])
+  triageId         String?
+  comments         String?
+
+  appointment_logs AppointmentLog[]
+}
+
+model ContactAttempt {
+  id           String   @id @default(uuid())
+  patient      Patient  @relation(fields: [patientId], references: [id])
+  patientId    String
+  method       String
+  contact_time DateTime @default(now())
+  comment      String?
+}
+
+model AppointmentLog {
+  id             String      @id @default(uuid())
+  waiting_entry  WaitingList @relation(fields: [waitingListId], references: [id])
+  waitingListId  String
+  fulfilled_at   DateTime    @default(now())
+  scheduled_time DateTime
+  notes          String?
+}
