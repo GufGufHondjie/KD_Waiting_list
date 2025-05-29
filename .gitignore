@@ -1,5 +1,12 @@
-node_modules
-# Keep environment variables out of version control
+node_modules/
 .env
+*.log
+
+# SQLite DB
+dev.db
+*.sqlite
+
+# Build
+frontend/build/
 
 /generated/prisma
