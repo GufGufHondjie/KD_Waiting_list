@@ -27,6 +27,9 @@ app.use("/waiting-list", waitingListRoutes);
 const contactRoutes = require("./routes/contactRoutes");
 app.use("/contacts", contactRoutes);
 
+const appointmentTypeRoutes = require("./routes/appointmentTypeRoutes");
+app.use("/appointment-types", appointmentTypeRoutes);
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
