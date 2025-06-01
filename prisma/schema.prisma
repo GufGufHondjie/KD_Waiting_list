@@ -42,16 +42,15 @@ model Provider {
 }
 
 model TriageRule {
-  id                  String          @id @default(uuid())
-  appointment_type    AppointmentType @relation(fields: [appointmentTypeId], references: [id])
-  appointmentTypeId   String
-  pain                Boolean
-  broken_tooth        Boolean
-  swelling            Boolean
-  sensitive_temp      Boolean
-  existing_patient    Boolean
-  calculated_priority Int
-  waiting_entries     WaitingList[]
+  id                        String          @id @default(uuid())
+  appointment_type          AppointmentType @relation(fields: [appointmentTypeId], references: [id])
+  appointmentTypeId         String
+  pain_level                String
+  swelling_present          Boolean
+  fever_present             Boolean
+  existing_patient          Boolean
+  request_to_bring_forward  Boolean
+  calculated_priority       Int
 }
 
 model WaitingList {
@@ -64,11 +63,9 @@ model WaitingList {
 
   providers_needed String
   duration         Int
-  created_at       DateTime    @default(now())
+  created_at       DateTime @default(now())
   status           String
   priority         Int
-  triage           TriageRule? @relation(fields: [triageId], references: [id])
-  triageId         String?
   comments         String?
 
   appointment_logs AppointmentLog[]
@@ -87,7 +84,7 @@ model AppointmentLog {
   id             String      @id @default(uuid())
   waiting_entry  WaitingList @relation(fields: [waitingListId], references: [id])
   waitingListId  String
-  fulfilled_at   DateTime    @default(now())
+  fulfilled_at   DateTime @default(now())
   scheduled_time DateTime
   notes          String?
 }
