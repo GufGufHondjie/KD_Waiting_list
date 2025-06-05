@@ -38,14 +38,31 @@ exports.getWaitingList = async (req, res) => {
   }
 };
 
-// ✅ Add a new entry with embedded triage logic
+/**
+ * Adds a new entry to the waiting list with embedded triage logic.
+ * Status is automatically set to "open".
+ * @param {import('express').Request} req - The Express request object.
+ * @param {object} req.body - The request body.
+ * @param {string} req.body.patientId - ID of the patient.
+ * @param {string} req.body.appointmentTypeId - ID of the appointment type.
+ * @param {string[]} [req.body.providers_needed=[]] - Array of provider codes needed (e.g., ["NG", "TS"]).
+ * @param {number} req.body.duration - Duration of the appointment in minutes.
+ * @param {string} [req.body.comments] - Optional comments for the waiting list entry.
+ * @param {object} [req.body.triage={}] - Triage details.
+ * @param {string} [req.body.triage.pain_level="none"] - Patient's pain level.
+ * @param {boolean} [req.body.triage.swelling_present=false] - If swelling is present.
+ * @param {boolean} [req.body.triage.fever_present=false] - If fever is present.
+ * @param {boolean} [req.body.triage.existing_patient=false] - If the patient is existing.
+ * @param {boolean} [req.body.triage.request_to_bring_forward=false] - If there's a request to bring appointment forward.
+ * @param {import('express').Response} res - The Express response object.
+ */
 exports.addToWaitingListWithTriage = async (req, res) => {
   const {
     patientId,
     appointmentTypeId,
     providers_needed,
     duration,
-    status,
+    // status, // Status will be set to "open" by default
     comments,
     triage = {},
   } = req.body;
@@ -99,9 +116,9 @@ exports.addToWaitingListWithTriage = async (req, res) => {
       data: {
         patientId,
         appointmentTypeId,
-        providers_needed: JSON.stringify(providers_needed || []),
+        providers_needed: JSON.stringify(providers_needed || []), // Already correct for Json type
         duration,
-        status,
+        status: "open", // Set status to "open" by default
         priority: score,
         comments,
       },

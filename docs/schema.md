@@ -17,9 +17,9 @@ Stores core patient information and preferences.
 | `last_name`       | String    |                                            |
 | `birthdate`       | DateTime  |                                            |
 | `phone`           | String    |                                            |
-| `whatsapp_number` | String?   | Optional                                   |
-| `preferred_times` | String    | JSON-encoded array of preferred time slots |
-| `preferred_language` | String? | e.g. "en", "es", "nl", "de"                |
+| `has_whatsapp`    | Boolean?  | True if patient uses WhatsApp on the provided phone number |
+| `preferred_times` | Json      | JSON object detailing preferred days (monday-friday) and times (morning/afternoon). Example: {"monday": {"morning": true, "afternoon": false}, ...} |
+| `preferred_language` | String? | Preferred communication language (e.g., "PAP", "NL", "ES", "EN") |
 | `created_at`      | DateTime  | Auto-generated                             |
 | `notes`           | String?   | Freeform comment field                     |
 
@@ -33,10 +33,10 @@ Tracks appointment change requests and emergency entries.
 | `id`              | String    | UUID Primary Key                                   |
 | `patientId`       | String    | FK → `Patient.id`                                  |
 | `appointmentTypeId` | String  | FK → `AppointmentType.id`                          |
-| `providers_needed`| String    | JSON-encoded array of roles (e.g. Dentist, Hygienist) |
+| `providers_needed`| Json      | JSON-encoded array of provider codes needed (e.g., ["NG", "TS", "EM"]) |
 | `duration`        | Int       | In minutes                                         |
 | `created_at`      | DateTime  | Auto-generated                                     |
-| `status`          | String    | "open", "scheduled", "cancelled", etc.            |
+| `status`          | String    | "open", "scheduled", "cancelled", etc. New entries default to "open" |
 | `priority`        | Int       | Used for triage sorting                           |
 | `triageId`        | String?   | Optional FK → `TriageRule.id`                      |
 | `comments`        | String?   | Freeform                                           |

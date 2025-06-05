@@ -15,13 +15,27 @@ exports.getAllPatients = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new patient.
+ * @param {import('express').Request} req - The Express request object.
+ * @param {object} req.body - The request body.
+ * @param {string} req.body.first_name - Patient's first name.
+ * @param {string} req.body.last_name - Patient's last name.
+ * @param {string} req.body.birthdate - Patient's birthdate (ISO string).
+ * @param {string} req.body.phone - Patient's phone number.
+ * @param {boolean} [req.body.has_whatsapp=false] - Whether the patient uses WhatsApp on the provided phone number.
+ * @param {object} req.body.preferred_times - JSON object detailing preferred days (monday-friday) and times (morning/afternoon). Example: `{"monday": {"morning": true, "afternoon": false}}`.
+ * @param {string} [req.body.preferred_language] - Preferred communication language (e.g., "PAP", "NL", "ES", "EN").
+ * @param {string} [req.body.notes] - Optional notes about the patient.
+ * @param {import('express').Response} res - The Express response object.
+ */
 exports.createPatient = async (req, res) => {
   const {
     first_name,
     last_name,
     birthdate,
     phone,
-    whatsapp_number,
+    has_whatsapp,
     preferred_times,
     preferred_language,
     notes,
@@ -34,8 +48,8 @@ exports.createPatient = async (req, res) => {
         last_name,
         birthdate: new Date(birthdate),
         phone,
-        whatsapp_number,
-        preferred_times: JSON.stringify(preferred_times || []),
+        has_whatsapp,
+        preferred_times: preferred_times, // Prisma expects a JSON-compatible object for Json type
         preferred_language,
         notes,
       },

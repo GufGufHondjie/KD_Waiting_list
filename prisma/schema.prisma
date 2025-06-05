@@ -15,8 +15,8 @@ model Patient {
   last_name          String
   birthdate          DateTime
   phone              String
-  whatsapp_number    String?
-  preferred_times    String
+  has_whatsapp       Boolean? @default(false)
+  preferred_times    Json
   preferred_language String?
   created_at         DateTime @default(now())
   notes              String?
@@ -61,7 +61,7 @@ model WaitingList {
   appointment_type  AppointmentType @relation(fields: [appointmentTypeId], references: [id])
   appointmentTypeId String
 
-  providers_needed String
+  providers_needed Json
   duration         Int
   created_at       DateTime @default(now())
   status           String
