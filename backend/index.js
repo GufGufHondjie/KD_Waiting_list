@@ -2,7 +2,7 @@
 
 const express = require("express");
 const cors = require("cors");
-const { PrismaClient } = require("../node_modules/@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 require("dotenv").config();
 
 const app = express();
@@ -31,6 +31,12 @@ const appointmentTypeRoutes = require("./routes/appointmentTypeRoutes");
 app.use("/appointment-types", appointmentTypeRoutes);
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+
+// Start the server only if this file is run directly
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app; // Export the app for testing
